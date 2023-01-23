@@ -30,7 +30,7 @@ First we need to set the following Secret variables in Jenkins:
 - $AZURE_CLIENT_ID
 - $AZURE_TENANT_ID
 
-### If we use Jenkins:latest continer as Jenkins server, we don't need to install node.js and Azure CLI as they are pre installed. We can use following code.
+### If we use Jenkins:latest continer as Jenkins server, we don't need to install node.js and Azure CLI as they are pre installed. We can use following code.(Jenkinsfile)
 ```
 pipeline {
     agent {
@@ -64,6 +64,13 @@ pipeline {
                 sh 'zip -r application.zip .'
             }
         }
+        stage('Install Terraform') {
+            steps {
+                sh 'wget https://releases.hashicorp.com/terraform/0.14.8/terraform_0.14.8_linux_amd64.zip'
+                sh 'unzip terraform_0.14.8_linux_amd64.zip'
+                sh 'mv terraform /usr/local/bin/'
+            }
+        }
         stage('Provision Azure Web App') {
             steps {
                 sh 'terraform init'
@@ -84,9 +91,9 @@ pipeline {
     }
 }
 ```
-This Jenkins pipeline uses the Jenkins Pipeline plugin to define the stages of the pipeline. It starts by checking out the code from the GitHub repository, then it runs npm install to install the dependencies, npm test to test the code, then it uses Terraform to provision the Azure Web App, then it checks if Azure CLI is installed or not, if not it will install and deploy the application to a test environment.
+This Jenkins pipeline uses the Jenkins Pipeline plugin to define the stages of the pipeline. It starts by checking out the code from the GitHub repository, then it runs npm install to install the dependencies, npm test to test the code, then it uses Terraform to provision the Azure Web App, then it checks if Azure CLI is installed or not, if not it will install and deploy the application to a production environment.
 
-### If we use local machine as Jenkins server, we  need to install node.js and Azure CLI. We can use following code.
+### If we use local machine as Jenkins server, we  need to install node.js and Azure CLI. We can use following code.(Jenkinsfile)
 ```
 pipeline {
     agent {
@@ -111,11 +118,6 @@ pipeline {
                 sh 'sudo apt-get install -y nodejs'
             }
         }
-        stage('Install Azure CLI') {
-            steps {
-                sh 'curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash'
-            }
-        }
         stage('Build') {
             steps {
                 sh 'npm install'
@@ -131,7 +133,25 @@ pipeline {
                 sh 'zip -r application.zip .'
             }
         }
-        stage('Deploy to Test') {
+        stage('Install Terraform') {
+            steps {
+                sh 'wget https://releases.hashicorp.com/terraform/0.14.8/terraform_0.14.8_linux_amd64.zip'
+                sh 'unzip terraform_0.14.8_linux_amd64.zip'
+                sh 'mv terraform /usr/local/bin/'
+            }
+        }
+        stage('Provision Azure Web App') {
+            steps {
+                sh 'terraform init'
+                sh 'terraform apply -auto-approve'
+            }
+        }
+        stage('Install Azure CLI') {
+            steps {
+                sh 'curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash'
+            }
+        }
+        stage('Deploy to Production') {
             steps {
                 sh 'az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID'
                 sh 'az webapp deployment source config-zip --resource-group $RESOURCE_GROUP --name $WEBAPP_NAME_PROD --src application.zip'
