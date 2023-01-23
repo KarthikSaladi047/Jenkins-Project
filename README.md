@@ -187,7 +187,7 @@ resource "azurerm_linux_web_app" "web_app" {
 }
 ```
 # Thanks
-Thank you for reading my project documentation. I appreciate your interest on this project. If you have any questions or feedback, please don't hesitate to reach out to us at karthiksaaldi047@gmail.com
+Thank you for reading my project documentation. I appreciate your interest on this project. If you have any questions or feedback, please don't hesitate to reach out to me at karthiksaladi047@gmail.com
 
 We hope that this documentation has provided you with the information you need to understand and use our project. I will continue to update and improve it as we receive feedback and make changes to the project.
 
