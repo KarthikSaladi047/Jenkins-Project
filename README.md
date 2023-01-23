@@ -59,6 +59,11 @@ pipeline {
                 sh 'npm test'
             }
         }
+        stage('Zip Code') {
+            steps {
+                sh 'zip -r application.zip .'
+            }
+        }
         stage('Provision Azure Web App') {
             steps {
                 sh 'terraform init'
@@ -73,12 +78,11 @@ pipeline {
         stage('Deploy to Production') {
             steps {
                 sh 'az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID'
-                sh 'az webapp deployment source config-zip --resource-group $RESOURCE_GROUP --name $WEBAPP_NAME_PROD --src path/to/application.zip'
+                sh 'az webapp deployment source config-zip --resource-group $RESOURCE_GROUP --name $WEBAPP_NAME_PROD --src application.zip'
             }
         }
     }
 }
-
 ```
 This Jenkins pipeline uses the Jenkins Pipeline plugin to define the stages of the pipeline. It starts by checking out the code from the GitHub repository, then it runs npm install to install the dependencies, npm test to test the code, then it uses Terraform to provision the Azure Web App, then it checks if Azure CLI is installed or not, if not it will install and deploy the application to a test environment.
 
@@ -122,21 +126,24 @@ pipeline {
                 sh 'npm test'
             }
         }
+        stage('Zip Code') {
+            steps {
+                sh 'zip -r application.zip .'
+            }
+        }
         stage('Deploy to Test') {
             steps {
                 sh 'az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID'
-                sh 'az webapp deployment source config-zip --resource-group $RESOURCE_GROUP --name $WEBAPP_NAME_PROD --src path/to/application.zip'
+                sh 'az webapp deployment source config-zip --resource-group $RESOURCE_GROUP --name $WEBAPP_NAME_PROD --src application.zip'
             }
         }
     }
 }
-
 ```
 This Jenkins pipeline uses the Jenkins Pipeline plugin to define the stages of the pipeline. It starts by checking out the code from the GitHub repository, then it installs node.js and Azure CLI, then it runs npm install to install the dependencies, npm test to test the code, then it uses Terraform to provision the Azure Web App and deploy the application to a test environment.
 
-## Terraform configuration
+## Terraform configuration file for provisioning web app on Azure
 ```
-
 terraform {
   required_providers {
     azurerm = {
@@ -178,5 +185,9 @@ resource "azurerm_linux_web_app" "web_app" {
     }
   }
 }
-
 ```
+Thank you for reading my project documentation. I appreciate your interest to the project. If you have any questions or feedback, please don't hesitate to reach out to us at karthiksaaldi047@gmail.com
+
+We hope that this documentation has provided you with the information you need to understand and use our project. I will continue to update and improve it as we receive feedback and make changes to the project.
+
+Thank you again for your interest and support. I look forward to hearing from you.
