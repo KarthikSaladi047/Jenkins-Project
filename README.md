@@ -30,7 +30,7 @@ First we need to set the following Secret variables in Jenkins:
 - $AZURE_CLIENT_ID
 - $AZURE_TENANT_ID
 
-# If we use Jenkins:latest continer as Jenkins server, we don't need to install node.js and Azure CLI as they are pre installed. We can use following code.
+### If we use Jenkins:latest continer as Jenkins server, we don't need to install node.js and Azure CLI as they are pre installed. We can use following code.
 ```
 pipeline {
     agent {
@@ -82,7 +82,7 @@ pipeline {
 ```
 This Jenkins pipeline uses the Jenkins Pipeline plugin to define the stages of the pipeline. It starts by checking out the code from the GitHub repository, then it runs npm install to install the dependencies, npm test to test the code, then it uses Terraform to provision the Azure Web App, then it checks if Azure CLI is installed or not, if not it will install and deploy the application to a test environment.
 
-# If we use local machine as Jenkins server, we  need to install node.js and Azure CLI. We can use following code.
+### If we use local machine as Jenkins server, we  need to install node.js and Azure CLI. We can use following code.
 ```
 pipeline {
     agent {
