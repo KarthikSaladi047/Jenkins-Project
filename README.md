@@ -1,10 +1,10 @@
-# Project: CI/CD Pipeline for a Simple Node.js Application
+# Project: CI/CD Pipeline for a Simple Node.js Application 
 
 ## Overview
 This project aims to demonstrate the implementation of a CI/CD pipeline for a simple Node.js application using Jenkins. The pipeline includes the following stages:
 - Build: Compile and test the application code.
 - Infra Provisioning : Using terraform provision Azure app service.
-- Deploy: Deploy the application to a test environment.
+- Deploy: Deploy the application to a Production environment.
 
 ## Tools and Technologies
 - Jenkins: The CI/CD tool used to automate the pipeline.
@@ -19,11 +19,28 @@ This project aims to demonstrate the implementation of a CI/CD pipeline for a si
 - Add a build step to the job that runs the following command: npm install to install the application's dependencies.
 - Add another build step to the job that runs the following command: npm test to run the tests for the application.
 - Add another step to provision web app using Terraform.
-- Add a post-build action to the job that deploys the application to a test environment.
+- Add a post-build action to the job that deploys the application to a Production environment.
+
+First we need to set the following Secret variables in Jenkins:
+- $RESOURCE_GROUP
+- $WEBAPP_NAME_PROD
+- $AZURE_CLIENT_SECRET
+- $AZURE_CLIENT_ID
+- $AZURE_TENANT_ID
+
+# If we use Jenkins:latest continer as Jenkins server, we don't need to install node.js and Azure CLI as they are pre installed. We can use following code.
 ```
 pipeline {
-    agent any
-
+    agent {
+        container 'jenkins:latest'
+    }
+    environment {
+        AZURE_CLIENT_ID = credentials('AZURE_CLIENT_ID')
+        AZURE_CLIENT_SECRET = credentials('AZURE_CLIENT_SECRET')
+        AZURE_TENANT_ID = credentials('AZURE_TENANT_ID')
+        RESOURCE_GROUP = credentials('RESOURCE_GROUP')
+        WEBAPP_NAME_PROD = credentials('WEBAPP_NAME_PROD')
+    }
     stages {
         stage('Checkout') {
             steps {
@@ -46,16 +63,74 @@ pipeline {
                 sh 'terraform apply -auto-approve'
             }
         }
-        stage('Deploy to Test') {
+        stage('Azure CLI Installation') {
             steps {
-                // Add steps to deploy the application to a production environment
+                sh 'az --version || (apt-get update && apt-get install -y azure-cli)'
+            }
+        }
+        stage('Deploy to Production') {
+            steps {
+                sh 'az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID'
+                sh 'az webapp deployment source config-zip --resource-group $RESOURCE_GROUP --name $WEBAPP_NAME_PROD --src path/to/application.zip'
             }
         }
     }
 }
 
 ```
-This Jenkins pipeline uses the Jenkins Pipeline plugin to define the stages of the pipeline. It starts by checking out the code from the GitHub repository, then it runs npm install to install the dependencies, npm test to test the code, then it uses Terraform to provision the Azure Web App and deploy the application to a test environment.
+This Jenkins pipeline uses the Jenkins Pipeline plugin to define the stages of the pipeline. It starts by checking out the code from the GitHub repository, then it runs npm install to install the dependencies, npm test to test the code, then it uses Terraform to provision the Azure Web App, then it checks if Azure CLI is installed or not, if not it will install and deploy the application to a test environment.
+
+# If we use local machine as Jenkins server, we  need to install node.js and Azure CLI. We can use following code.
+```
+pipeline {
+    agent {
+        label 'Ubuntu'
+    }
+     environment {
+        AZURE_CLIENT_ID = credentials('AZURE_CLIENT_ID')
+        AZURE_CLIENT_SECRET = credentials('AZURE_CLIENT_SECRET')
+        AZURE_TENANT_ID = credentials('AZURE_TENANT_ID')
+        RESOURCE_GROUP = credentials('RESOURCE_GROUP')
+        WEBAPP_NAME_PROD = credentials('WEBAPP_NAME_PROD')
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                git url: 'https://github.com/KarthikSaladi047/Jenkins-Project.git', branch: 'main'
+            }
+        }
+        stage('Install Node.js') {
+            steps {
+                sh 'curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -'
+                sh 'sudo apt-get install -y nodejs'
+            }
+        }
+        stage('Install Azure CLI') {
+            steps {
+                sh 'curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'npm install'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'npm test'
+            }
+        }
+        stage('Deploy to Test') {
+            steps {
+                sh 'az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID'
+                sh 'az webapp deployment source config-zip --resource-group $RESOURCE_GROUP --name $WEBAPP_NAME_PROD --src path/to/application.zip'
+            }
+        }
+    }
+}
+
+```
+This Jenkins pipeline uses the Jenkins Pipeline plugin to define the stages of the pipeline. It starts by checking out the code from the GitHub repository, then it installs node.js and Azure CLI, then it runs npm install to install the dependencies, npm test to test the code, then it uses Terraform to provision the Azure Web App and deploy the application to a test environment.
 
 ## Terraform configuration
 ```
@@ -70,43 +145,36 @@ terraform {
 }
 
 provider "azurerm" {
-  # Configuration options
+  # add your  Configuration details
+  subscription_id = ""
+  tenant_id       = ""
+  client_id       = ""
+  client_secret   = ""
 }
 
-resource "azurerm_resource_group" "Resource_Group" {
-  name     = "React-JS-RG"
-  location = "East US "
+resource "azurerm_resource_group" "web_app_rg" {
+  name     = "Web-Resource-Group"
+  location = "East US"
 }
 
-resource "azurerm_storage_account" "Storage" {
-  name                     = "mystorage229929"
-  resource_group_name      = azurerm_resource_group.Resource_Group.name
-  location                 = azurerm_resource_group.Resource_Group.location
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
+resource "azurerm_service_plan" "service_plan" {
+  name                = "serviceplan22"
+  resource_group_name = azurerm_resource_group.web_app_rg.name
+  location            = azurerm_resource_group.web_app_rg.location
+  os_type             = "Linux"
+  sku_name            = "S1"
 }
 
-resource "azurerm_app_service_plan" "Service_Plan" {
-  name                = "webapp-plan"
-  location            = azurerm_resource_group.Resource_Group.location
-  resource_group_name = azurerm_resource_group.Resource_Group.name
-
-  sku {
-    tier = "Basic"
-    size = "B1"
-  }
-}
-
-resource "azurerm_app_service" "App_Service" {
-  name                = "nodejs-webapp"
-  location            = azurerm_resource_group.Resource_Group.location
-  resource_group_name = azurerm_resource_group.Resource_Group.name
-  app_service_plan_id = azurerm_app_service_plan.Service_Plan.id
-
-  app_settings = {
-    "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = "false"
+resource "azurerm_linux_web_app" "web_app" {
+  name                = "webapp22334455"
+  resource_group_name = azurerm_resource_group.web_app_rg.name
+  location            = azurerm_service_plan.service_plan.location
+  service_plan_id     = azurerm_service_plan.service_plan.id
+  site_config {
+    application_stack {
+      node_version = "14-lts"
+    }
   }
 }
 
 ```
-
