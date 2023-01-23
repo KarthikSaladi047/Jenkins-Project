@@ -12,5 +12,5 @@ Release: Deploy the application to a production environment.
 Jenkins: The CI/CD tool used to automate the pipeline.
 Node.js: The application is built with Node.js.
 npm: The package manager used for the application.
-Terraform: The Insfrastructure as tool used for provisioning App Service on azure
+Terraform: The Insfrastructure as tool used for provisioning App Service on azure.
 
