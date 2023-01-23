@@ -12,6 +12,7 @@ This project aims to demonstrate the implementation of a CI/CD pipeline for a si
 - npm: The package manager used for the application.
 - Azure: Cloud provider used to host the application.
 - Terraform: The Insfrastructure Provisioning tool used for provisioning App Service on Azure.
+![You](https://user-images.githubusercontent.com/105864615/214066788-570ed97c-ebab-45cf-81ce-94b15dcb5619.jpg)
 
 ## Jenkins Pipeline
 - Install Jenkins on your system and create a new Jenkins job for the pipeline.
