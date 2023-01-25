@@ -211,7 +211,7 @@ We hope that this documentation has provided you with the information you need t
 
 Thank you again for your interest and support. I look forward to hearing from you.
 
-# Contact
+# About Me
 <div id="header" align="center">
   <img src="https://media.giphy.com/media/f3iwJFOVOwuy7K6FFw/giphy.gif" width="400">
   <div id="badges">
@@ -219,15 +219,16 @@ Thank you again for your interest and support. I look forward to hearing from yo
         <img src="https://img.shields.io/badge/LinkedIn-blue?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn Badge"/>
       </a><br>
       <img src="https://komarev.com/ghpvc/?username=KarthikSaladi047&style=flat-square&color=blue" alt=""/>
-      <h1>
-        hey there
-        <img src="https://media.giphy.com/media/hvRJCLFzcasrR4ia7z/giphy.gif" width="30px"/>
-      </h1>
   </div>
 </div>
 
 ---
 
+<h1  align="center">
+    hey there
+    <img src="https://media.giphy.com/media/hvRJCLFzcasrR4ia7z/giphy.gif" width="30px"/>
+ </h1>
+ 
 ### :man_technologist: About Me :
 I am a DevOps Engineer <img src="https://media.giphy.com/media/WUlplcMpOCEmTGBtBW/giphy.gif" width="30"> from India.
 
