@@ -210,3 +210,16 @@ Thank you for reading my project documentation. I appreciate your interest on th
 We hope that this documentation has provided you with the information you need to understand and use our project. I will continue to update and improve it as we receive feedback and make changes to the project.
 
 Thank you again for your interest and support. I look forward to hearing from you.
+
+# Contact
+<div id="header" align="center">
+  <img src="https://media.giphy.com/media/f3iwJFOVOwuy7K6FFw/giphy.gif" width="100">
+  <div id="badges">
+      <a href="https://www.linkedin.com/in/sai-sampath-karthik-saladi-76a42a259">
+        <img src="https://img.shields.io/badge/LinkedIn-blue?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn Badge"/>
+      </a>
+  <img src="https://komarev.com/ghpvc/?username=KarthikSaladi047&style=flat-square&color=blue" alt=""/>
+  </div>
+</div>
+
+ 
