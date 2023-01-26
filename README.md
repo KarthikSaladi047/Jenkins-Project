@@ -1,7 +1,7 @@
-# Project: CI/CD Pipeline for a Simple Node.js Application 
+# <img src="https://github.com/devicons/devicon/blob/master/icons/jenkins/jenkins-original.svg" title="jenkins" **alt="jenkins" width="40" height="40"/> CI/CD Pipeline for a Simple <img src="https://github.com/devicons/devicon/blob/master/icons/react/react-original-wordmark.svg" title="react" **alt="react" width="40" height="40"/> Application 
 
 ## Overview
-This project aims to demonstrate the implementation of a CI/CD pipeline for a simple Node.js application using Jenkins. The pipeline includes the following stages:
+This project aims to demonstrate the implementation of a CI/CD pipeline for a simple Reactjs application using Jenkins. The pipeline includes the following stages:
 - Build: Compile and test the application code.
 - Infra Provisioning : Using terraform provision Azure app service.
 - Deploy: Deploy the application to a Production environment.
