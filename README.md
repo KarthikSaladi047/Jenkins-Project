@@ -1,4 +1,4 @@
-# Jenkins CI/CD Pipeline🚀 for a Simple React JS Application🌐
+# <img src="https://camo.githubusercontent.com/0a16218f80a1832b5244500de2367b6985e2077efc4cd1f0c71dc38a4a348740/68747470733a2f2f6a656e6b696e732e696f2f696d616765732f6c6f676f732f6a656e6b696e732f6a656e6b696e732e706e67" title="jenkins" alt="jenkins" width="40" height="55"/> Jenkins CI/CD Pipeline for a Simple React JS <img src="https://th.bing.com/th/id/R.f81a6f373c244b1f70f4b7402b5ab372?rik=rbXh4ieLuKt%2bmA&riu=http%3a%2f%2flogos-download.com%2fwp-content%2fuploads%2f2016%2f09%2fReact_logo_logotype_emblem.png&ehk=QhGOkKcUKCU7FBQgHOajOiJqJBACUTD2Ni6LsfqzCEA%3d&risl=&pid=ImgRaw&r=0" title="react" alt="react" width="40" height="40"/> Application 
 
 ## Overview
 This project aims to demonstrate the implementation of a CI/CD pipeline for a simple Reactjs application using Jenkins. The pipeline includes the following stages:
